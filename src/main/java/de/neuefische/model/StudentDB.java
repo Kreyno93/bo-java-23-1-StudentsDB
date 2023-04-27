@@ -1,24 +1,26 @@
 package de.neuefische.model;
 
-import java.util.Arrays;
-import java.util.Random;
+import java.rmi.NoSuchObjectException;
+import java.util.*;
 
 public class StudentDB {
 
-    private Student[] students;
+    private Map<Integer,Student> studentList = new HashMap<>();
 
 
-    public StudentDB(Student[] students) {
-        this.students = students;
+    public StudentDB(Map<Integer, Student> studentList) {
+        this.studentList = studentList;
     }
 
-    public Student[] getStudents() {
-        return students;
+    public Map<Integer, Student> getStudentList() {
+        return studentList;
     }
 
-
-    public void setStudents(Student[] students) {
-        this.students = students;
+    public Student getStudentById(int id){
+        if(studentList.containsKey(id)){
+            return studentList.get(id);
+        }
+        throw new StudentNotFoundException("Student with id " + id + " not found");
     }
 
     @Override
@@ -26,23 +28,24 @@ public class StudentDB {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StudentDB studentDB = (StudentDB) o;
-        return Arrays.equals(students, studentDB.students);
+        return Objects.equals(studentList, studentDB.studentList);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(students);
-    }
-
-    public Student randomStudent() {
-        Random random = new Random();
-        return students[random.nextInt(students.length-1)];
+        return Objects.hash(studentList);
     }
 
     @Override
     public String toString() {
         return "StudentDB{" +
-                "students=" + Arrays.toString(students) +
+                "studentList=" + studentList +
                 '}';
     }
+
+    public void addStudent(Student student){
+        studentList.put(student.getId(),student);
+    }
+
+
 }

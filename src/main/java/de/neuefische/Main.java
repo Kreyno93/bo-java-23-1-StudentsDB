@@ -1,25 +1,41 @@
 package de.neuefische;
 
 
-import de.neuefische.model.BiologyStudent;
-import de.neuefische.model.ComputerScienceStudent;
-import de.neuefische.model.Student;
-import de.neuefische.model.StudentDB;
+import de.neuefische.model.*;
+
+import java.rmi.NoSuchObjectException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 public class Main {
     public static void main(String[] args) {
 
-        Student student1 = new Student("Max",22);
-        Student student2 = new Student("Moritz",25);
+        Student computerScienceStudent1 = new ComputerScienceStudent("Nerd",11,true);
+        Student computerScienceStudent2 = new ComputerScienceStudent("Nerd2",34,true);
+        Student biologyStudent = new BiologyStudent("Nerd3",66,true);
 
-        Student[] students = {student1,student2};
-
-
+        Map<Integer,Student> students = new HashMap<>(Map.of(
+                computerScienceStudent1.getId(),computerScienceStudent1,
+                computerScienceStudent2.getId(),computerScienceStudent2,
+                biologyStudent.getId(),biologyStudent
+        ));
         StudentDB studentDB = new StudentDB(students);
 
-        Student computerScienceStudent = new ComputerScienceStudent("Nerd",11,true);
-        ComputerScienceStudent computerScienceStudent1 = new ComputerScienceStudent("Nerd2",34,true);
-        BiologyStudent biologyStudent = new BiologyStudent("Nerd3",66,true);
+        Student studentToAdd = new BiologyStudent("Nerd4",77,true);
+        studentDB.addStudent(studentToAdd);
+
+        try{
+            Student student = studentDB.getStudentById(1);
+            System.out.println(student);
+        } catch (StudentNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println(studentDB.getStudentList());
+        System.out.println("Ich habs bis hier hin geschafft!! =^-^=");
+
+
 
 
 
